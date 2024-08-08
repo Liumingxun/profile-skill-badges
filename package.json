@@ -1,0 +1,27 @@
+{
+  "name": "skill-badges",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "shield.io",
+    "skill-badges",
+    "profile-badges"
+  ],
+  "scripts": {
+    "build": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@iconify-json/logos": "^1.1.44",
+    "iconify-icon": "^2.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.24.1",
+    "@types/node": "^22.1.0",
+    "eslint": "^9.8.0",
+    "tsx": "^4.16.5",
+    "typescript": "^5.5.4"
+  }
+}
