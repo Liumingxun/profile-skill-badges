@@ -1,5 +1,10 @@
-# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,node
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,node
+# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,astro,node
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,astro,node
+
+### Astro ###
+# Gitignore template for Astro projects
+# Ignore content collection generated files
+.astro
 
 ### Linux ###
 *~
@@ -214,5 +219,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,node
+# End of https://www.toptal.com/developers/gitignore/api/linux,windows,macos,astro,node
 
