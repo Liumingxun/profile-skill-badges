@@ -2,12 +2,12 @@ import type { Component } from 'solid-js'
 import { createSignal } from 'solid-js'
 import { template } from 'solid-js/web'
 
-const SvgCheckbox: Component<{ svg: string, handleCheck: (checked: boolean, name: string) => void, name: string }> = (props) => {
+const SvgCheckbox: Component<{ svg: string, name: string, handleCheck: (checked: boolean, name: string, svg: string) => void }> = (props) => {
   const [checked, setChecked] = createSignal(false)
 
   const handleCheck = () => {
     setChecked(!checked())
-    props.handleCheck(checked(), props.name)
+    props.handleCheck(checked(), props.name, props.svg)
   }
 
   // const fixed_name = props.name.replace(/-icon$/, '').replace(/-/g, ' ')

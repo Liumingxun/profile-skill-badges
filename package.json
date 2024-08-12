@@ -21,6 +21,7 @@
     "@astrojs/tailwind": "^5.1.0",
     "@iconify-json/logos": "^1.1.44",
     "@iconify/utils": "^2.1.30",
+    "@solid-primitives/clipboard": "^1.5.10",
     "astro": "^4.13.1",
     "solid-devtools": "^0.30.1",
     "solid-js": "^1.8.19",

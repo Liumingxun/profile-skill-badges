@@ -1,8 +1,9 @@
-import { getSvg } from '/utils'
-import { Show, createSignal, splitProps } from 'solid-js'
+import { type ShieldStyle, getShieldUrl, getSvg } from '/utils'
+import { For, Show, createSignal, splitProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import SvgCheckbox from './SvgCheckbox'
 import RadioGroup from './RadioGroup'
+import { writeClipboard } from '@solid-primitives/clipboard'
 
 export default (props: { icon_keys: string[] }) => {
   const [{ icon_keys }] = splitProps(props, ['icon_keys'])
@@ -19,12 +20,18 @@ export default (props: { icon_keys: string[] }) => {
   const filtered_icon_keys = icon_keys.filter((key) => {
     return !duplicate_keys.includes(key)
   })
-  const svg_list = filtered_icon_keys.slice(0, 20).map(name => ({ name, svg: getSvg(name, '2em') }))
+  const svg_list = filtered_icon_keys.map(name => ({ name, svg: getSvg(name, '2em') }))
 
   const [keyword, setKeyword] = createSignal('')
   const [step, setStep] = createSignal(1)
-  const [buildList, setBuildList] = createSignal<string[]>([])
-  const [shieldConfig, setShieldConfig] = createStore({
+  const [buildList, setBuildList] = createSignal<Array<{
+    name: string
+    svg: string
+  }>>([])
+  const [shieldConfig, setShieldConfig] = createStore<{
+    style: ShieldStyle
+    labelColor: 'light' | 'dark'
+  }>({
     style: 'for-the-badge',
     labelColor: 'light',
   })
@@ -37,13 +44,25 @@ export default (props: { icon_keys: string[] }) => {
     setStep(step)
   }
 
-  const handleCheck = (checked: boolean, name: string) => {
+  const handleCheck = (checked: boolean, name: string, svg: string) => {
     if (checked) {
-      setBuildList([...buildList(), name])
+      setBuildList([...buildList(), { name, svg }])
     }
     else {
-      setBuildList(buildList().filter(item => item !== name))
+      setBuildList(buildList().filter(item => item.name !== name))
     }
+  }
+
+  const clickCopy = (value: string) => {
+    writeClipboard(value)
+  }
+
+  const copyAll = () => {
+    writeClipboard(
+      buildList().map(v =>
+        getShieldUrl(v.name, v.svg, shieldConfig.style, shieldConfig.labelColor),
+      ).join('\n'),
+    )
   }
 
   return (
@@ -71,7 +90,7 @@ export default (props: { icon_keys: string[] }) => {
           </div>
         </div>
         <div class="ds-collapse-content overflow-y-auto">
-          <div class="h-64 p-4 flex max-w-full flex-wrap gap-1.5 transform-gpu">
+          <div class="h-64 p-4 flex flex-wrap gap-1.5 transform-gpu">
             {
               svg_list.filter(({ name }) => (new RegExp(keyword())).test(name))
                 .map(({ name, svg }) => (
@@ -92,7 +111,7 @@ export default (props: { icon_keys: string[] }) => {
           </div>
         </div>
         <div class="ds-collapse-content">
-          <div class="h-64 p-4 flex max-w-full gap-4">
+          <div class="h-64 p-4 flex gap-4">
             <form class="ds-form-control w-40">
               <label class="ds-label">
                 <span class="ds-label-text">Shield's style</span>
@@ -101,7 +120,7 @@ export default (props: { icon_keys: string[] }) => {
                 options={['for-the-badge', 'flat-square', 'plastic', 'flat', 'social']}
                 name="style"
                 mapFn={x => x.replace(/-/g, ' ')}
-                handleChange={selected => setShieldConfig({ ...shieldConfig, style: selected })}
+                handleChange={selected => setShieldConfig({ ...shieldConfig, style: selected as ShieldStyle })}
               />
             </form>
             <form class="ds-form-control w-40">
@@ -111,7 +130,7 @@ export default (props: { icon_keys: string[] }) => {
               <RadioGroup
                 options={['light', 'dark']}
                 name="labelColor"
-                handleChange={selected => setShieldConfig({ ...shieldConfig, labelColor: selected })}
+                handleChange={selected => setShieldConfig({ ...shieldConfig, labelColor: selected as 'light' | 'dark' })}
               />
             </form>
           </div>
@@ -119,11 +138,26 @@ export default (props: { icon_keys: string[] }) => {
       </div>
       <div class="ds-collapse bg-base-200">
         <input type="radio" class="pointer-events-none" name="my-accordion-2" checked={step() === 3} />
-        <div class="ds-collapse-title ds-alert text-xl font-medium">
-          <span>Step 3: Get your badge!</span>
+        <div class="ds-collapse-title ds-alert text-xl font-medium" classList={{ 'ds-alert-success': step() === 3 }}>
+          <span>Step 3: Get your skill badge!</span>
+          <div class="ml-auto flex gap-2">
+            <span class="text-sm leading-8">Tips: Click on the badge to copy the link</span>
+            <button class="ds-btn ds-btn-sm ds-btn-primary" classList={{ 'ds-btn-disabled': step() !== 3 }} onClick={copyAll}>Copy All</button>
+          </div>
         </div>
         <div class="ds-collapse-content">
-          <p>hello</p>
+          <div class="h-64 p-4 flex flex-wrap gap-1.5">
+            <For each={buildList()}>
+              {({ name, svg }) => {
+                const shield_url = getShieldUrl(name, svg, shieldConfig.style, shieldConfig.labelColor)
+                return (
+                  <div onClick={[clickCopy, shield_url]}>
+                    <img src={shield_url} alt={`${name}\'s skill badge`} title={`${name}\'s skill badge`} />
+                  </div>
+                )
+              }}
+            </For>
+          </div>
         </div>
       </div>
     </div>

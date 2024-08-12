@@ -20,6 +20,9 @@ importers:
       '@iconify/utils':
         specifier: ^2.1.30
         version: 2.1.30
+      '@solid-primitives/clipboard':
+        specifier: ^1.5.10
+        version: 1.5.10(solid-js@1.8.19)
       astro:
         specifier: ^4.13.1
         version: 4.13.1(@types/node@22.1.0)(typescript@5.5.4)
@@ -708,6 +711,11 @@ packages:
 
   '@solid-primitives/bounds@0.0.118':
     resolution: {integrity: sha512-Qj42w8LlnhJ3r/t+t0c0vrdwIvvQMPgjEFGmLiwREaA85ojLbgL9lSBq2tKvljeLCvRVkgj10KEUf+vc99VCIg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/clipboard@1.5.10':
+    resolution: {integrity: sha512-ohwlrBP4j+Qjksg01CFWaP/USpzX78dBNVA1DPRZkf/vJgytX0T6KMc2YxF6o8fs6ePIYSI8Nt3sKxF0sh1q+Q==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -3731,6 +3739,11 @@ snapshots:
       '@solid-primitives/event-listener': 2.3.3(solid-js@1.8.19)
       '@solid-primitives/resize-observer': 2.0.26(solid-js@1.8.19)
       '@solid-primitives/static-store': 0.0.5(solid-js@1.8.19)
+      '@solid-primitives/utils': 6.2.3(solid-js@1.8.19)
+      solid-js: 1.8.19
+
+  '@solid-primitives/clipboard@1.5.10(solid-js@1.8.19)':
+    dependencies:
       '@solid-primitives/utils': 6.2.3(solid-js@1.8.19)
       solid-js: 1.8.19
 
