@@ -1,27 +1,33 @@
 import { getSvg } from '/utils'
+import { Show, createSignal, splitProps } from 'solid-js'
+import { createStore } from 'solid-js/store'
 import SvgCheckbox from './SvgCheckbox'
-import { icons } from '@iconify-json/logos'
-import { Show, createSignal } from 'solid-js'
+import RadioGroup from './RadioGroup'
 
-const icon_keys = Object.keys(icons.icons)
-const pure_filter_keys = /(.*)-icon$/
-const duplicate_keys: string[] = []
+export default (props: { icon_keys: string[] }) => {
+  const [{ icon_keys }] = splitProps(props, ['icon_keys'])
 
-icon_keys.forEach((key) => {
-  const matches = key.match(pure_filter_keys)
-  if (matches)
-    duplicate_keys.push(matches[1])
-})
+  const duplicate_keys: string[] = []
+  const pure_filter_keys = /(.*)-icon$/
 
-const filtered_icon_keys = icon_keys.filter((key) => {
-  return !duplicate_keys.includes(key)
-})
+  icon_keys.forEach((key) => {
+    const matches = key.match(pure_filter_keys)
+    if (matches)
+      duplicate_keys.push(matches[1])
+  })
 
-const svg_list = filtered_icon_keys.map(key => ({ name: key, svg: getSvg(key, '2em') }))
+  const filtered_icon_keys = icon_keys.filter((key) => {
+    return !duplicate_keys.includes(key)
+  })
+  const svg_list = filtered_icon_keys.slice(0, 20).map(name => ({ name, svg: getSvg(name, '2em') }))
 
-export default () => {
   const [keyword, setKeyword] = createSignal('')
   const [step, setStep] = createSignal(1)
+  const [buildList, setBuildList] = createSignal<string[]>([])
+  const [shieldConfig, setShieldConfig] = createStore({
+    style: 'for-the-badge',
+    labelColor: 'light',
+  })
 
   const handleNextStep = () => {
     setStep(step() + 1)
@@ -29,6 +35,15 @@ export default () => {
 
   const handleBackHere = (step: number) => {
     setStep(step)
+  }
+
+  const handleCheck = (checked: boolean, name: string) => {
+    if (checked) {
+      setBuildList([...buildList(), name])
+    }
+    else {
+      setBuildList(buildList().filter(item => item !== name))
+    }
   }
 
   return (
@@ -40,8 +55,8 @@ export default () => {
           name="my-accordion-2"
           checked={step() === 1}
         />
-        <div class="ds-collapse-title ds-alert ds-alert-info text-xl font-medium">
-          <span>Step 1: Select you needed skill icon</span>
+        <div class={`ds-collapse-title ds-alert text-xl font-medium ${step() > 1 ? 'ds-alert-success' : step() === 1 ? 'ds-alert-info' : ''}`}>
+          <span>Step 1: Select your needed skill icon</span>
           <div class="ml-auto gap-2 flex">
             <input
               type="text"
@@ -50,17 +65,17 @@ export default () => {
               class="ds-input ds-input-sm"
               placeholder="Filter support regexp"
             />
-            <Show when={step() === 1} fallback={<button class="ds-btn ds-btn-sm" onClick={[handleBackHere, 1]}>Back here</button>}>
-              <button class="ds-btn ds-btn-sm ds-btn-primary" onClick={handleNextStep}>Next</button>
+            <Show when={step() <= 1} fallback={<button class="ds-btn ds-btn-sm" onClick={[handleBackHere, 1]}>Back here</button>}>
+              <button class="ds-btn ds-btn-sm ds-btn-primary" classList={{ 'ds-btn-disabled': buildList().length === 0 }} onClick={handleNextStep}>Next</button>
             </Show>
           </div>
         </div>
         <div class="ds-collapse-content overflow-y-auto">
-          <div class="h-64 p-4 flex max-w-full flex-wrap gap-2 transform-gpu">
+          <div class="h-64 p-4 flex max-w-full flex-wrap gap-1.5 transform-gpu">
             {
               svg_list.filter(({ name }) => (new RegExp(keyword())).test(name))
                 .map(({ name, svg }) => (
-                  <SvgCheckbox id={name} svg={svg} handleCheck={(checked) => { console.log(checked) }} />
+                  <SvgCheckbox name={name} svg={svg} handleCheck={handleCheck} />
                 ))
             }
           </div>
@@ -68,16 +83,38 @@ export default () => {
       </div>
       <div class="ds-collapse bg-base-200">
         <input type="radio" class="pointer-events-none" name="my-accordion-2" checked={step() === 2} />
-        <div class="ds-collapse-title ds-alert text-xl font-medium">
-          <span>Step 2: Custom your badge style</span>
+        <div class={`ds-collapse-title ds-alert text-xl font-medium ${step() > 2 ? 'ds-alert-success' : step() === 2 ? 'ds-alert-info' : ''}`}>
+          <span>Step 2: Custom your shield style</span>
           <div class="ml-auto flex gap-2">
-            <Show when={step() === 2} fallback={<button class="ds-btn ds-btn-sm" onClick={[handleBackHere, 2]}>Back here</button>}>
-              <button class="ds-btn ds-btn-sm ds-btn-primary" onClick={handleNextStep}>Next</button>
+            <Show when={step() <= 2} fallback={<button class="ds-btn ds-btn-sm" onClick={[handleBackHere, 2]}>Back here</button>}>
+              <button class="ds-btn ds-btn-sm ds-btn-primary" classList={{ 'ds-btn-disabled': step() === 1 }} onClick={handleNextStep}>Next</button>
             </Show>
           </div>
         </div>
         <div class="ds-collapse-content">
-          <p>hello</p>
+          <div class="h-64 p-4 flex max-w-full gap-4">
+            <form class="ds-form-control w-40">
+              <label class="ds-label">
+                <span class="ds-label-text">Shield's style</span>
+              </label>
+              <RadioGroup
+                options={['for-the-badge', 'flat-square', 'plastic', 'flat', 'social']}
+                name="style"
+                mapFn={x => x.replace(/-/g, ' ')}
+                handleChange={selected => setShieldConfig({ ...shieldConfig, style: selected })}
+              />
+            </form>
+            <form class="ds-form-control w-40">
+              <label class="ds-label">
+                <span class="ds-label-text">Shield's label color</span>
+              </label>
+              <RadioGroup
+                options={['light', 'dark']}
+                name="labelColor"
+                handleChange={selected => setShieldConfig({ ...shieldConfig, labelColor: selected })}
+              />
+            </form>
+          </div>
         </div>
       </div>
       <div class="ds-collapse bg-base-200">

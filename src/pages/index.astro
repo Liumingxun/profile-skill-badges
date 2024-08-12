@@ -1,5 +1,6 @@
 ---
 import BuildBadge from "@/components/BuildBadge";
+import { icon_keys } from "/utils";
 ---
 
 <section class="mx-auto max-w-7xl py-8 min-h-screen">
@@ -35,5 +36,5 @@ import BuildBadge from "@/components/BuildBadge";
     </p>
   </header>
   <div class="ds-divider"></div>
-  <BuildBadge client:only="solid-js" />
+  <BuildBadge client:only="solid-js" icon_keys={icon_keys} />
 </section>
