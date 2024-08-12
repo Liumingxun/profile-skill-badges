@@ -1,21 +1,5 @@
 ---
-import { icons } from "@iconify-json/logos";
-import { buildBadge } from "../buildShield";
-
-const icon_keys = Object.keys(icons.icons);
-const pure_filter_keys = /(.*)-icon$/;
-const duplicate_keys: string[] = [];
-
-icon_keys.forEach((key) => {
-  const matches = key.match(pure_filter_keys);
-  if (matches) duplicate_keys.push(matches[1]);
-});
-
-const filtered_icon_keys = icon_keys.filter((key) => {
-  return !duplicate_keys.includes(key);
-});
-
-const badge_list = await buildBadge(filtered_icon_keys);
+import BuildBadge from "@/components/BuildBadge";
 ---
 
 <section class="mx-auto max-w-7xl py-8 min-h-screen">
@@ -51,59 +35,5 @@ const badge_list = await buildBadge(filtered_icon_keys);
     </p>
   </header>
   <div class="ds-divider"></div>
-  <div class="flex flex-col gap-4">
-    <div class="ds-collapse bg-base-200">
-      <input
-        type="radio"
-        class="pointer-events-none"
-        name="my-accordion-2"
-        checked="checked"
-      />
-      <div class="ds-collapse-title ds-alert ds-alert-info text-xl font-medium">
-        <span>Step 1: Select you needed skill icon</span>
-        <div class="ml-auto z-10">
-          <input
-            type="text"
-            class="ds-input ds-input-sm"
-            placeholder="Filter support regexp"
-          />
-          <button class="ds-btn ds-btn-sm">Back here</button>
-          <button class="ds-btn ds-btn-sm ds-btn-primary">Next</button>
-        </div>
-      </div>
-      <div class="ds-collapse-content p-4 overflow-y-auto">
-        <div class="h-64 flex max-w-full flex-wrap gap-2">
-          {
-            badge_list.map((badge) => (
-              <span id={badge.name}>
-                <Fragment set:html={badge.svg} />
-              </span>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-    <div class="ds-collapse bg-base-200">
-      <input type="radio" class="pointer-events-none" name="my-accordion-2" />
-      <div class="ds-collapse-title text-xl font-medium">
-        Click to open this one and close others
-        <div class="ml-auto z-10">
-          <button class="ds-btn ds-btn-sm">Back here</button>
-          <button class="ds-btn ds-btn-sm ds-btn-primary">Next</button>
-        </div>
-      </div>
-      <div class="ds-collapse-content">
-        <p>hello</p>
-      </div>
-    </div>
-    <div class="ds-collapse bg-base-200">
-      <input type="radio" class="pointer-events-none" name="my-accordion-2" />
-      <div class="ds-collapse-title text-xl font-medium">
-        Click to open this one and close others
-      </div>
-      <div class="ds-collapse-content">
-        <p>hello</p>
-      </div>
-    </div>
-  </div>
+  <BuildBadge client:only="solid-js" />
 </section>
