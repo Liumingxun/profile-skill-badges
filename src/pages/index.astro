@@ -2,40 +2,43 @@
 import "@/assets/global.css";
 import BuildBadge from "@/components/BuildBadge";
 import { icon_keys } from "/utils";
+import Default from "@/layouts/Default.astro";
 ---
 
-<section class="mx-auto max-w-7xl py-8 min-h-screen">
-  <header>
-    <h1
-      class="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-6xl"
-    >
-      <span
-        class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+<Default>
+  <section class="mx-auto max-w-7xl py-8 min-h-screen">
+    <header>
+      <h1
+        class="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-6xl"
       >
-        Skill Badges
-      </span>
-    </h1>
-    <p class="mt-6 text-xl leading-8 text-gray-600">
-      There are over 2000 skill badges available for use in your profile.
-    </p>
-    <p>
-      Powered by <a
-        class="ds-link"
-        href="//shields.io"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        shields.io
-      </a> and <a
-        class="ds-link"
-        href="//github.com/gilbarbara/logos"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        gilbarbara's logos
-      </a>.
-    </p>
-  </header>
-  <div class="ds-divider"></div>
-  <BuildBadge client:only="solid-js" icon_keys={icon_keys} />
-</section>
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+        >
+          Skill Badges
+        </span>
+      </h1>
+      <p class="mt-6 text-xl leading-8 text-gray-600">
+        There are over 2000 skill badges available for use in your profile.
+      </p>
+      <p>
+        Powered by <a
+          class="ds-link"
+          href="//shields.io"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          shields.io
+        </a> and <a
+          class="ds-link"
+          href="//github.com/gilbarbara/logos"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          gilbarbara's logos
+        </a>.
+      </p>
+    </header>
+    <div class="ds-divider"></div>
+    <BuildBadge client:only="solid-js" icon_keys={icon_keys} />
+  </section>
+</Default>

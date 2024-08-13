@@ -24,6 +24,7 @@
     "@iconify/utils": "^2.1.30",
     "@solid-primitives/clipboard": "^1.5.10",
     "astro": "^4.13.1",
+    "astro-seo": "^0.8.4",
     "solid-js": "^1.8.19",
     "tailwindcss": "^3.4.8"
   },

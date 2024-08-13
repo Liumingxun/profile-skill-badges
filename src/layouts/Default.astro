@@ -1,0 +1,38 @@
+---
+import { SEO } from "astro-seo";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title="Profile Skill Badges"
+      canonical={Astro.url}
+      description="Customize your profile badges on github, over 2000 skill icon for you!"
+      openGraph={{
+        basic: {
+          image: "/favicon.png",
+          title: "Skill Badges for your profile",
+          type: "website",
+        },
+      }}
+      extend={{
+        meta: [
+          {
+            name: "author",
+            content: "Liumingxun <https://github.com/Liumingxun>",
+          },
+          { name: "msapplication-TileColor", content: "#AAD37D" },
+          { name: "theme-color", content: "#AAD37D" },
+        ],
+        link: [{ rel: "icon", href: "/favicon.png" }],
+      }}
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
