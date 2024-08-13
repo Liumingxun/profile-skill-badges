@@ -6,7 +6,7 @@ import solid from '@astrojs/solid-js'
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), solid({ devtools: true })],
+  integrations: [tailwind(), solid({ devtools: !!import.meta.env.DEV })],
   vite: {
     resolve: {
       alias: {
