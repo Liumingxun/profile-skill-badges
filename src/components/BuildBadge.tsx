@@ -1,5 +1,5 @@
 import { type ShieldStyle, getShieldUrl, getSvg } from '/utils'
-import { For, Show, createSignal, splitProps } from 'solid-js'
+import { For, Show, createMemo, createSignal, splitProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import SvgCheckbox from './SvgCheckbox'
 import RadioGroup from './RadioGroup'
@@ -31,9 +31,15 @@ export default (props: { icon_keys: string[] }) => {
   const [shieldConfig, setShieldConfig] = createStore<{
     style: ShieldStyle
     labelColor: 'light' | 'dark'
+    isSvg: boolean
+    preview: boolean
+    type: 'url' | 'markdown' | 'html'
   }>({
     style: 'for-the-badge',
     labelColor: 'light',
+    isSvg: true,
+    preview: false,
+    type: 'url',
   })
 
   const handleNextStep = () => {
@@ -53,16 +59,22 @@ export default (props: { icon_keys: string[] }) => {
     }
   }
 
+  const filteredSvgList = createMemo(() => {
+    return svg_list.filter(({ name }) => (new RegExp(keyword())).test(name))
+  })
+
+  const shieldList = createMemo(() => {
+    return step() === 3
+      ? buildList().map(({ name, svg }) => ({ name, url: getShieldUrl(name, svg, shieldConfig.style, shieldConfig.labelColor, shieldConfig.isSvg) }))
+      : []
+  }, [])
+
   const clickCopy = (value: string) => {
     writeClipboard(value)
   }
 
   const copyAll = () => {
-    writeClipboard(
-      buildList().map(v =>
-        getShieldUrl(v.name, v.svg, shieldConfig.style, shieldConfig.labelColor),
-      ).join('\n'),
-    )
+    writeClipboard(shieldList().map(({ url }) => url).join('\n'))
   }
 
   return (
@@ -71,7 +83,7 @@ export default (props: { icon_keys: string[] }) => {
         <input
           type="radio"
           class="pointer-events-none"
-          name="my-accordion-2"
+          name="build-step"
           checked={step() === 1}
         />
         <div class={`ds-collapse-title ds-alert text-xl font-medium ${step() > 1 ? 'ds-alert-success' : step() === 1 ? 'ds-alert-info' : ''}`}>
@@ -80,7 +92,7 @@ export default (props: { icon_keys: string[] }) => {
             <input
               type="text"
               value={keyword()}
-              onChange={e => setKeyword(e.target.value)}
+              onInput={e => setKeyword(e.target.value)}
               class="ds-input ds-input-sm"
               placeholder="Filter support regexp"
             />
@@ -91,17 +103,16 @@ export default (props: { icon_keys: string[] }) => {
         </div>
         <div class="ds-collapse-content overflow-y-auto">
           <div class="h-64 p-4 flex flex-wrap gap-1.5 transform-gpu">
-            {
-              svg_list.filter(({ name }) => (new RegExp(keyword())).test(name))
-                .map(({ name, svg }) => (
-                  <SvgCheckbox name={name} svg={svg} handleCheck={handleCheck} />
-                ))
-            }
+            <For each={filteredSvgList()}>
+              {({ name, svg }) => (
+                <SvgCheckbox checked={buildList().some(item => item.name === name)} name={name} svg={svg} handleCheck={handleCheck} />
+              )}
+            </For>
           </div>
         </div>
       </div>
       <div class="ds-collapse bg-base-200">
-        <input type="radio" class="pointer-events-none" name="my-accordion-2" checked={step() === 2} />
+        <input type="radio" class="pointer-events-none" name="build-step" checked={step() === 2} />
         <div class={`ds-collapse-title ds-alert text-xl font-medium ${step() > 2 ? 'ds-alert-success' : step() === 2 ? 'ds-alert-info' : ''}`}>
           <span>Step 2: Custom your shield style</span>
           <div class="ml-auto flex gap-2">
@@ -133,11 +144,30 @@ export default (props: { icon_keys: string[] }) => {
                 handleChange={selected => setShieldConfig({ ...shieldConfig, labelColor: selected as 'light' | 'dark' })}
               />
             </form>
+            <form class="ds-form-control w-40">
+              <label class="ds-label">
+                <span class="ds-label-text">Shield's type</span>
+              </label>
+              <RadioGroup
+                options={['url', 'markdown', 'html']}
+                name="type"
+              />
+            </form>
+            <form class="ds-form-control w-auto">
+              <label class="ds-label cursor-pointer">
+                <span class="ds-label-text">Do you need a svg?</span>
+                <input type="checkbox" checked={shieldConfig.isSvg} onChange={() => setShieldConfig({ ...shieldConfig, isSvg: !shieldConfig.isSvg })} class="ds-checkbox" />
+              </label>
+              <label class="ds-label cursor-pointer">
+                <span class="ds-label-text">Do you need a preview?</span>
+                <input type="checkbox" checked={shieldConfig.preview} onChange={() => setShieldConfig({ ...shieldConfig, preview: !shieldConfig.preview })} class="ds-checkbox" />
+              </label>
+            </form>
           </div>
         </div>
       </div>
       <div class="ds-collapse bg-base-200">
-        <input type="radio" class="pointer-events-none" name="my-accordion-2" checked={step() === 3} />
+        <input type="radio" class="pointer-events-none" name="build-step" checked={step() === 3} />
         <div class="ds-collapse-title ds-alert text-xl font-medium" classList={{ 'ds-alert-success': step() === 3 }}>
           <span>Step 3: Get your skill badge!</span>
           <div class="ml-auto flex gap-2">
@@ -147,12 +177,11 @@ export default (props: { icon_keys: string[] }) => {
         </div>
         <div class="ds-collapse-content">
           <div class="h-64 p-4 flex flex-wrap gap-1.5">
-            <For each={buildList()}>
-              {({ name, svg }) => {
-                const shield_url = getShieldUrl(name, svg, shieldConfig.style, shieldConfig.labelColor)
+            <For each={shieldList()}>
+              {({ url, name }) => {
                 return (
-                  <div onClick={[clickCopy, shield_url]}>
-                    <img src={shield_url} alt={`${name}\'s skill badge`} title={`${name}\'s skill badge`} />
+                  <div onClick={[clickCopy, url]}>
+                    <img src={url} alt={`${name}\'s skill badge`} />
                   </div>
                 )
               }}
