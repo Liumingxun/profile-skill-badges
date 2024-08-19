@@ -12,6 +12,7 @@
     "profile-badges"
   ],
   "scripts": {
+    "postinstall": "tsx ./scripts/postinstall.ts",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
