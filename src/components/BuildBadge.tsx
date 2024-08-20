@@ -8,16 +8,26 @@ import SvgCheckbox from './SvgCheckbox'
 import RadioGroup from './RadioGroup'
 
 export default () => {
-  const [iconKeys, setIconKeys] = createSignal<null | string[]>(null)
-  const [iconData, setIconData] = createSignal<null | IconifyJSON>(null)
+  const [iconKeys, setIconKeys] = createSignal<string[]>()
+  const [iconData, setIconData] = createSignal<IconifyJSON>()
 
   const [loadDone, setLoadDone] = createSignal(false)
 
+  const fetchIconData = async () => {
+    const [iconKeysResponse, iconDataResponse] = await Promise.all([
+      fetch('/icon_keys.json'),
+      fetch('/icon_data.json'),
+    ])
+
+    const iconKeys = await iconKeysResponse.json()
+    const iconData = await iconDataResponse.json()
+
+    setIconKeys(iconKeys)
+    setIconData(iconData)
+  }
+
   onMount(() => {
-    Promise.all([
-      fetch('/icon_keys.json').then(res => res.json()).then(json => setIconKeys(json)),
-      fetch('/icon_data.json').then(res => res.json()).then(json => setIconData(json)),
-    ]).then(() => setLoadDone(true))
+    fetchIconData().then(() => setLoadDone(true))
   })
 
   const svgList = createMemo(() => {
@@ -64,7 +74,7 @@ export default () => {
   }
 
   const filteredSvgList = createMemo(() =>
-    svgList()?.filter(({ name }) => (new RegExp(keyword())).test(name)),
+    svgList()?.filter(({ name }) => (new RegExp(keyword(), 'i')).test(name)),
   )
 
   const shieldList = createMemo(() => {
