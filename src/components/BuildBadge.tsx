@@ -76,12 +76,25 @@ export default () => {
       : []
   }, [])
 
-  const clickCopy = (value: string) => {
-    writeClipboard(value)
+  const getContent = (url: string, name: string): string => {
+    switch (shieldConfig.type) {
+      case 'html':
+        return `<img src="${url}" alt="${name}" />`
+      case 'markdown':
+        return `![${name}](${url})`
+      default:
+        return url
+    }
+  }
+
+  const clickCopy = ([url, name]: [string, string]) => {
+    const content = getContent(url, name)
+    writeClipboard(content)
   }
 
   const copyAll = () => {
-    writeClipboard(shieldList().map(({ url }) => url).join('\n'))
+    const content = shieldList().map(({ url, name }) => getContent(url, name)).join('\n')
+    writeClipboard(content)
   }
 
   return (
@@ -151,7 +164,7 @@ export default () => {
             </div>
           </div>
           <div class="ds-collapse-content">
-            <div class="h-64 pt-2 flex gap-4">
+            <div class="h-64 pt-2 flex gap-2">
               <form class="ds-form-control w-40">
                 <label class="ds-label">
                   <span class="ds-label-text">Shield's style</span>
@@ -180,16 +193,13 @@ export default () => {
                 <RadioGroup
                   options={['url', 'markdown', 'html']}
                   name="type"
+                  handleChange={selected => setShieldConfig({ ...shieldConfig, type: selected as 'url' | 'markdown' | 'html' })}
                 />
               </form>
-              <form class="ds-form-control w-auto">
+              <form class="ds-form-control">
                 <label class="ds-label cursor-pointer">
                   <span class="ds-label-text">Do you need a svg?</span>
                   <input type="checkbox" checked={shieldConfig.isSvg} onChange={() => setShieldConfig({ ...shieldConfig, isSvg: !shieldConfig.isSvg })} class="ds-checkbox" />
-                </label>
-                <label class="ds-label cursor-pointer">
-                  <span class="ds-label-text">Do you need a preview?</span>
-                  <input type="checkbox" checked={shieldConfig.preview} onChange={() => setShieldConfig({ ...shieldConfig, preview: !shieldConfig.preview })} class="ds-checkbox" />
                 </label>
               </form>
             </div>
@@ -205,14 +215,12 @@ export default () => {
             </div>
           </div>
           <div class="ds-collapse-content">
-            <div class="h-64 pt-2 flex flex-wrap gap-1.5">
+            <div class="h-64 pt-2">
               <For each={shieldList()}>
                 {({ url, name }) => {
                   return (
-                    <div class="cursor-pointer inline-block" onClick={[clickCopy, url]}>
-                      <Show when={shieldConfig.preview}>
-                        <img src={url} alt={`${name}\'s skill badge`} />
-                      </Show>
+                    <div class="cursor-pointer inline-block px-1" onClick={[clickCopy, [url, name]]}>
+                      <img src={url} alt={`${name}\'s skill badge`} />
                     </div>
                   )
                 }}
