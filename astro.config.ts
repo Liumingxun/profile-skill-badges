@@ -6,6 +6,7 @@ import solid from '@astrojs/solid-js'
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://badge.limx.fun',
   integrations: [tailwind(), solid({ devtools: !!import.meta.env.DEV })],
   vite: {
     resolve: {

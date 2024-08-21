@@ -1,27 +1,47 @@
 ---
 import "@/assets/global.css";
 import BuildBadge from "@/components/BuildBadge";
-import { icon_keys } from "/utils";
 import Default from "@/layouts/Default.astro";
 ---
 
 <Default>
-  <section class="mx-auto max-w-7xl py-8 min-h-screen">
-    <header>
-      <h1
-        class="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-6xl"
-      >
-        <span
-          class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+  <section class="mx-auto max-w-screen-md min-h-screen">
+    <header class="pt-8">
+      <div class="flex justify-between">
+        <h1
+          class="font-extrabold tracking-tight text-5xl leading-[normal] bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
         >
           Skill Badges
-        </span>
-      </h1>
-      <p class="mt-6 text-xl leading-8 text-gray-600">
+        </h1>
+        <div class="self-end">
+          <div class="flex flex-col items-end gap-1">
+            <span>
+              <img
+                alt="GitHub Repo stars"
+                src="https://img.shields.io/github/stars/Liumingxun/profile-skill-badges?style=flat-square&color=66ccff"
+              />
+            </span>
+            <a
+              href="https://github.com/Liumingxun/profile-skill-badges"
+              target="_blank"
+            >
+              <img
+                alt="Static Badge"
+                src="https://img.shields.io/badge/Find_me_on-GitHub-66ccff?style=flat-square"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+      <p class="mt-6 text-lg text-gray-600">
         Easily create and customize skill badges for your profiles. Export in
         Markdown or HTML, and integrate them into websites, GitHub, and more.
       </p>
-      <p>
+    </header>
+    <div class="ds-divider"></div>
+    <BuildBadge client:only="solid-js" />
+    <div class="flex justify-between pt-4">
+      <span>
         Powered by <a
           class="ds-link"
           href="//shields.io"
@@ -37,9 +57,20 @@ import Default from "@/layouts/Default.astro";
         >
           gilbarbara's logos
         </a>.
-      </p>
-    </header>
-    <div class="ds-divider"></div>
-    <BuildBadge client:only="solid-js" icon_keys={icon_keys} />
+      </span>
+      <span>
+        Hosted on <a
+          href="http://cloudflare.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            class="inline-block"
+            src="https://img.shields.io/badge/Cloudflare-eff1f5.svg?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0LjM4ZW0iIGhlaWdodD0iMmVtIiB2aWV3Qm94PSIwIDAgMjU2IDExNyI+PHBhdGggZmlsbD0iI0ZCQUQ0MSIgZD0iTTIwNS41MiA1MC44MTNjLS44NTggMC0xLjcwNS4wMy0yLjU1MS4wNThxLS4yMDcuMDEyLS4zOTguMDk0YTEuNDIgMS40MiAwIDAgMC0uOTIuOTk0bC0zLjYyOCAxMi42NzJjLTEuNTY1IDUuNDQ5LS45ODMgMTAuNDggMS42NDYgMTQuMTc0YzIuNDEgMy40MTYgNi40MiA1LjQyMSAxMS4yODkgNS42NTVsMTkuNjc5IDEuMTk0Yy41ODUuMDMgMS4wOTIuMzEyIDEuNC43NzZhMS45MiAxLjkyIDAgMCAxIC4yIDEuNjkyYTIuNSAyLjUgMCAwIDEtMi4xMzQgMS42NjJsLTIwLjQ0OCAxLjE5M2MtMTEuMTEuNTE1LTIzLjA2MiA5LjU4LTI3LjI1NSAyMC42MzNsLTEuNDc0IDMuOWExLjA5MiAxLjA5MiAwIDAgMCAuOTY3IDEuNDloNzAuNDI1YTEuODcgMS44NyAwIDAgMCAxLjgxLTEuMzY1QTUxLjIgNTEuMiAwIDAgMCAyNTYgMTAxLjgyOGMwLTI4LjE2LTIyLjU4Mi01MC45ODQtNTAuNDQ5LTUwLjk4NCIvPjxwYXRoIGZpbGw9IiNGNjgyMUYiIGQ9Im0xNzQuNzgyIDExNS4zNjJsMS4zMDMtNC41ODNjMS41NjgtNS40NDkuOTg3LTEwLjQ4LTEuNjM5LTE0LjE3M2MtMi40MTgtMy40MTctNi40MjQtNS40MjItMTEuMjk2LTUuNjU2bC05Mi4zMTItMS4xOTNhMS44MiAxLjgyIDAgMCAxLTEuNDU5LS43NzZhMS45MiAxLjkyIDAgMCAxLS4yMDMtMS42OTNhMi41IDIuNSAwIDAgMSAyLjE1NC0xLjY2Mmw5My4xNzMtMS4xOTNjMTEuMDYzLS41MTEgMjMuMDE1LTkuNTggMjcuMjA4LTIwLjYzM2w1LjMxMy0xNC4wNGMuMjE0LS41OTYuMjctMS4yMzguMTU2LTEuODZDMTkxLjEyNiAyMC41MSAxNjYuOTEgMCAxMzcuOTYgMEMxMTEuMjY5IDAgODguNjI2IDE3LjQwMyA4MC41IDQxLjU5NmEyNyAyNyAwIDAgMC0xOS4xNTYtNS4zNTlDNDguNTQ5IDM3LjUyNCAzOC4yNSA0Ny45NDYgMzYuOTc5IDYwLjg4YTI3LjkgMjcuOSAwIDAgMCAuNzAyIDkuNjQyQzE2Ljc3MyA3MS4xNDUgMCA4OC40NTQgMCAxMDkuNzI2YzAgMS45MjMuMTM3IDMuODE4LjQxMyA1LjY2N2MuMTE1Ljg5Ny44NzkgMS41NyAxLjc4MyAxLjU2OGgxNzAuNDhhMi4yMiAyLjIyIDAgMCAwIDIuMTA2LTEuNjMiLz48L3N2Zz4="
+            alt="Cloudflare Icon"
+          />
+        </a>
+      </span>
+    </div>
   </section>
 </Default>

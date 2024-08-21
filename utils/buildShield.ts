@@ -1,10 +1,10 @@
 import { getIconData, iconToHTML, iconToSVG, replaceIDs } from '@iconify/utils'
-import { icons } from '@iconify-json/logos'
+import type { IconifyJSON } from '@iconify-json/logos'
 import { Base64 } from '.'
 
 export type ShieldStyle = 'flat' | 'flat-square' | 'plastic' | 'for-the-badge' | 'social'
 
-export function getSvg(name: string, size = 'auto') {
+export function getSvg(name: string, icons: IconifyJSON, size = 'auto') {
   const data = getIconData(icons, name)!
   const built = iconToSVG(data, { height: size })
   return iconToHTML(replaceIDs(built.body), built.attributes)
