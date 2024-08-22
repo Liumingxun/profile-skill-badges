@@ -1,0 +1,5 @@
+compatibility_date = "2024-08-22"
+minify = true
+
+[vars]
+PNPM_VERSION = "9.7.0"

@@ -18,5 +18,14 @@ export const GET: APIRoute = async ({ request: { url } }) => {
       302,
     )
   }
-  return Response.redirect(`${protocol}//${host}`, 302)
+  // @todo more friendly message
+  return new Response(JSON.stringify({
+    message: 'Please use the query params to build the badge',
+    example: `${protocol}//${host}/short?name=javascript&style=for-the-badge&labelColor=light&isSvg=true`,
+  }), {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    status: 400,
+  })
 }

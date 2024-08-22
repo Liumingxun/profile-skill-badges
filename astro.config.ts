@@ -3,10 +3,12 @@ import { cwd } from 'node:process'
 import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import solid from '@astrojs/solid-js'
+import cloudflare from '@astrojs/cloudflare'
 
 // https://astro.build/config
 export default defineConfig({
   output: 'hybrid',
+  adapter: cloudflare(),
   site: 'https://badge.limx.fun',
   integrations: [tailwind(), solid({ devtools: !!import.meta.env.DEV })],
   vite: {
