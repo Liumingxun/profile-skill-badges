@@ -1,5 +1,6 @@
+name = "profile-skill-badges"
 compatibility_date = "2024-08-22"
-minify = true
+pages_build_output_dir = "dist"
 
 [vars]
 PNPM_VERSION = "9.7.0"

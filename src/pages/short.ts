@@ -3,7 +3,9 @@ import { type ShieldStyle, getShieldUrl, getSvg } from '/utils'
 
 export const prerender = false
 
-const icon_data = await import('@iconify-json/logos').then(m => m.icons)
+const icon_data = import.meta.env.DEV
+  ? await import('@iconify-json/logos').then(m => m.icons)
+  : await fetch(new URL('/icon_data.json', import.meta.env.SITE)).then(m => m.json())
 export const GET: APIRoute = async ({ request: { url } }) => {
   const { searchParams: query, host, protocol } = new URL(url)
   if (query.get('name')) {
