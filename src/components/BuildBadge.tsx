@@ -3,7 +3,7 @@ import { createStore } from 'solid-js/store'
 import { writeClipboard } from '@solid-primitives/clipboard'
 import type { IconifyJSON } from '@iconify-json/logos'
 
-import { type ShieldStyle, getShieldUrl, getSvg } from '/utils'
+import { type ShieldStyle, getSvg } from '/utils'
 import SvgCheckbox from './SvgCheckbox'
 import RadioGroup from './RadioGroup'
 
@@ -79,9 +79,9 @@ export default () => {
 
   const shieldList = createMemo(() => {
     return step() === 3
-      ? buildList().map(({ name, svg }) => ({
+      ? buildList().map(({ name }) => ({
         name,
-        url: getShieldUrl(name, svg, shieldConfig.style, shieldConfig.labelColor, shieldConfig.isSvg),
+        url: `${window.location.protocol}//${window.location.host}/short?name=${name}&style=${shieldConfig.style}&labelColor=${shieldConfig.labelColor}&isSvg=${shieldConfig.isSvg}`,
       }))
       : []
   }, [])
